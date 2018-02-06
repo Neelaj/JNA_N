@@ -1,0 +1,73 @@
+Sub stock_totamtyearlymoderate_solution()
+On Error Resume Next
+For Each ws In Worksheets
+Dim i As Long
+
+Dim ticker_name As String
+Dim ticker_open_value As Double
+Dim ticker_close_vlaue As Double
+Dim yearly_ticker_value As Double
+Dim percent_change As Double
+
+Dim summary_total As Double
+Dim greatest_dec As Double
+Dim greatest_volume As Double
+Dim worksheetName As String
+
+summary_total = 2
+total_vol = 0
+
+Dim lRow As Double
+
+worksheetName = ws.Name
+lRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+MsgBox (worksheetName)
+
+For i = 2 To lRow
+ws.Range("I1").Value = "Ticker"
+
+ws.Range("J1").Value = "yearly_change"
+ws.Range("K1").Value = "Percent_change"
+ws.Range("L1").Value = "Total stock_volume"
+
+If (ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value) Then
+  ticker_name = ws.Cells(i, 1).Value
+  ticker_close_value = ws.Cells(i, 6).Value
+  
+  yearly_ticker_value = ticker_close_value - ticker_open_value
+  
+  total_vol = total_vol + ws.Cells(i, 7).Value
+  
+  'ticker
+  ws.Range("I" & summary_total).Value = ticker_name
+ 
+  ws.Range("L" & summary_total).Value = total_vol
+  
+  'yearly_ticker
+  ws.Range("J" & summary_total).Value = yearly_ticker_value
+  percent_change = (yearly_ticker_value / ticker_open_value)
+  
+  
+  'percent_change
+  ws.Range("K" & summary_total).Value = percent_change
+  Range("K" & summary_total).NumberFormat = "0.00%"
+  
+  summary_total = summary_total + 1
+  
+  total_vol = 0
+    
+ElseIf (ws.Cells(i - 1, 1).Value <> ws.Cells(i, 1).Value) Then
+  
+   ticker_open_value = ws.Cells(i, 3).Value
+  
+Else
+      total_vol = total_vol + ws.Cells(i, 7).Value
+End If
+
+Next i
+Next ws
+
+
+End Sub
+
